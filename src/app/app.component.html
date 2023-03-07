@@ -1,0 +1,145 @@
+<br><br><br>
+
+<!----------------Encabezado--------------------------->
+<div class="container">
+  <!-- Toolbar -->
+  <div class="toolbar" role="banner">
+    <img
+      width="40"
+      alt="Angular Logo"
+      src="https://th.bing.com/th/id/OIP.ur5TplQ2UtHNaNumRAom3gHaHa?pid=ImgDet&rs=1"
+    />
+    <span>BIENVENIDO(A) Control de tareas</span>
+      <div class="spacer"></div>
+      <a aria-label="Angular on twitter" target="_blank" rel="noopener" href="https://twitter.com/angular" title="Twitter">
+        <img
+      width="40"
+      alt="Angular Logo"
+      src="https://th.bing.com/th/id/R.f872f474d32bf8ff6cf82a39523c4757?rik=29GkKInSsRSuOA&pid=ImgRaw&r=0"
+    />
+      </a>
+     
+  </div>
+
+    <!------------------------------------------------------------------------------->
+  <!--Etiqueta del compontente TaskItemComponent manejado por una condicion-->
+  <app-taskitem-component
+      [indice]="Index" 
+      (TaskItemBool)="manejarEvento($event)" 
+      *ngIf="!TaskItemBool" ></app-taskitem-component>
+  <!------------------------------------------------------------------------------->
+
+<!------------------------------Contnedor de registro  y listado controlado por una condicion ----------------------------------------------------->
+  <div class="container-fluid" *ngIf="TaskItemBool">
+    <div>
+        <h1>REGISTRO DE TAREAS</h1>
+    </div>
+    <div class="container">
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <!------------------------------Formulario reacivo y validacion para usuarios----------------------------------------------------->
+          <form [formGroup]="Registro" (ngSubmit)="RegistrarTarea()">
+            <div class="mb-3">
+              <label for="name" class="form-label">Titulo de la tarea</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Ingrese el nombre de la tarea a registrar" formControlName="name">
+              <span *ngIf="!Registro.get('name')!.valid && Registro.get('name')!.touched" style="color: red;">
+                El campo para el nombre de la tarea debe tener almenos 5 caracteres
+              </span>
+            </div>
+  
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripcion de la tarea</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Inserte aqui la Descripcion de la tarea a registrar"  formControlName="description"></textarea>
+              <span *ngIf="!Registro.get('description')!.valid && Registro.get('description')!.touched" style="color: red;">
+                El campo para la Descripcion es Requerido
+              </span>
+            </div>
+          
+          <div class="mb-3">
+            <label for="estado" class="form-label">Estado de la tarea</label>
+            <select class="form-select" aria-label="Default select example" formControlName="estado">
+              <option value="Pendiente">Pendiente</option>
+              <option value="Completada">Completada</option>
+            </select>
+          </div>
+
+            <button type="reset" class="btn btn-secondary btn-lg">Limpiar Campos</button>
+            &nbsp;&nbsp;&nbsp;
+            <button type="submit" [disabled]="!Registro.valid" class="btn btn-primary btn-lg">Registrar Tarea</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+     <br><br>
+    
+    <!---------------------------------------Listado de tareas registradas---------------------------------------------------------->
+    <div class="container">
+      <h2>LISTADO DE TAREAS REGISTRADAS</h2>
+<!------------------------------Formulario para la barra de busqueda----------------------------------------------------->
+      <form class="form-search"  id="s" >
+         <div class="input-append">
+            <input type="text" class="input-medium search-query" name="s" placeholder="Buscar por nombre" value="" [(ngModel)]="Search">
+             <button type="submit" class="add-on" (click)="buscarTareas()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg></button> 
+            &nbsp;
+            <button (click)="VerTodos()" *ngIf="List">Ver todos</button>
+            </div> 
+        </form>
+
+<!------------------------------ listado de tareas en una tabla----------------------------------------------------->
+      <table class="table" >
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Estado</th>
+            <th scope="col" *ngIf="!List">Acción</th>
+          </tr>
+        </thead>
+        <!-----------------------------listado con ngFor y validaciones en modo de busqueda o listado general----------------------------------------------------->
+        <tbody *ngFor="let element of Tareas; index as i">
+          <tr>
+            <th scope="row">{{i+1}}</th>
+            <td>{{element.name}}</td>
+            <td>{{element.description}}</td>
+            <td>{{element.estado}}</td>
+            <td><button class="btn" (click)="Editar(i)" *ngIf="!List"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+            </svg> Editar
+            </button></td>
+          </tr>
+        </tbody>
+        <!--Buscador sin resultado-->
+        <div *ngIf="Tareas.length === 0">
+          <h6>No se encontraron coincidencias</h6>
+        </div>
+      </table>
+      
+    </div>
+    
+  </div>	
+  <br>
+<hr>
+<!------------------------------Pie de pagina----------------------------------------------------->
+<footer style="margin-left: 60px;">
+  <br>
+  Footer
+  © 2023 Ing. Jonnier Teran, 
+  Footer navigation
+  Terms
+  Privacy
+  Security
+  Status
+  Tel: 3245644212
+  Contact Jonnierteranmorales@gmail.com
+<br> <br>
+</footer>
+
+</div>
+
+
+

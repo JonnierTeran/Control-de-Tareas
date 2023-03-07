@@ -1,0 +1,45 @@
+<!------------------------------Contnedor de Actualizacion, eliminacion y visualizacion por items----------------------------------------------------->
+<div class="container-fluid" >
+    <div>
+        <h1>ACTUALIZACIÓN DE TAREAS</h1>
+    </div>
+    <div class="container">
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <!------------------------------formulario y validaciones para el usuario----------------------------------------------------->
+          <form [formGroup]="ACTUALIZACION" >
+            <div class="mb-3">
+              <label for="name" class="form-label">Titulo de la tarea</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Ingrese el nombre de la tarea a registrar" formControlName="name">
+              <span *ngIf="!ACTUALIZACION.get('name')!.valid && ACTUALIZACION.get('name')!.touched" style="color: red;">
+                El campo para el nombre de la tarea debe tener almenos 5 caracteres
+              </span>
+            </div>
+  
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripcion de la tarea</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Inserte aqui la Descripcion de la tarea a registrar"  formControlName="description"></textarea>
+              <span *ngIf="!ACTUALIZACION.get('description')!.valid && ACTUALIZACION.get('description')!.touched" style="color: red;">
+                El campo para la Descripcion es Requerido
+              </span>
+            </div>
+
+            <div class="mb-3">
+              <label for="estado" class="form-label">Estado de la tarea</label>
+              <select class="form-select" aria-label="Default select example" formControlName="estado">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Completada">Completada</option>
+              </select>
+            </div>
+<!------------------------------Opciones del formulario----------------------------------------------------->
+            &nbsp;&nbsp;
+            <button type="submit" [disabled]="!ACTUALIZACION.valid" class="btn btn-primary btn-lg" (click)="UpdateTarea()">Actualizar Tarea</button>
+            &nbsp;&nbsp;
+            <button  class="btn btn-primary btn-lg" (click)="DeleteTarea()">Eliminar Tarea</button>
+            &nbsp;
+            <button  class="btn btn-secondary btn-lg" (click)="Cancelar()">Cancelar</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
